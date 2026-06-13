@@ -1,8 +1,11 @@
+import re
+
 from abc                       import ABC, abstractmethod
 from bs4                       import BeautifulSoup
 
 from apps.parser.services.data import AbstractFetcher, RecordsFetcher, RatingsFetcher, WinnersFetcher
 from apps.parser.services      import DataProcessor, WebDriver, URLsManager
+from apps.parser.services.utils.image_cache import FishImageCache
 
 
 class AbstractParser(ABC):
@@ -59,22 +62,17 @@ class RecordsParser(AbstractParser):
             if len(rows) <= 1:
                 continue
 
-            # Try to extract fish image from the fish container
-            fish_image = ""
-            try:
-                img_tag = fish.find("img")
-                if img_tag and img_tag.get("src"):
-                    src = img_tag["src"].strip()
-                    if src.startswith("//"):
-                        fish_image = f"https:{src}"
-                    elif src.startswith("/"):
-                        fish_image = f"https://rf4game.ru{src}"
-                    elif src.startswith("http"):
-                        fish_image = src
-            except Exception:
-                pass  # Image is optional
-
             fish_name = fish.find("div", class_ = "text").text
+
+            # Extract fish image from CSS background-image (rf4game.ru uses CSS sprites)
+            fish_image = ""
+            item_icon = fish.find("div", class_ = "item_icon")
+            if item_icon:
+                style = item_icon.get("style", "")
+                match = re.search(r'background-image:\s*url\([\'"]?(//[^\'")]+)[\'"]?\)', style)
+                if match:
+                    remote_url = "https:" + match.group(1)
+                    fish_image = FishImageCache.get(remote_url)
 
             for row in rows:
                 sub_records.append(

@@ -1,4 +1,5 @@
 import logging
+import os
 
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service  import Service
@@ -7,9 +8,14 @@ from selenium.webdriver.support.ui     import WebDriverWait
 from selenium.webdriver.support        import expected_conditions as EC
 from selenium.common.exceptions        import TimeoutException, WebDriverException
 from selenium                          import webdriver
-from webdriver_manager.chrome          import ChromeDriverManager
 
 logger = logging.getLogger(__name__)
+
+CHROMEDRIVER_PATH = (
+    "C:\\Users\\Qiu\\.wdm\\drivers\\chromedriver\\win64\\148.0.7778.178"
+    "\\chromedriver-win32\\chromedriver.exe"
+)
+CHROME_BIN = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 
 
 class WebDriver:
@@ -20,7 +26,7 @@ class WebDriver:
             "Chrome/127.0.0.0 Safari/537.36"
         )
         options = Options()
-        options.add_argument("--headless=new")
+        options.add_argument("--headless")
         options.add_argument("--disable-gpu")
         options.add_argument("--disable-extensions")
         options.add_argument("--disable-images")
@@ -28,8 +34,9 @@ class WebDriver:
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument(f"--user-agent={user_agent}")
+        options.binary_location = CHROME_BIN
 
-        service = Service(ChromeDriverManager().install())
+        service = Service(executable_path=CHROMEDRIVER_PATH)
         self._driver = webdriver.Chrome(service=service, options=options)
         self._driver.implicitly_wait(5)
 
