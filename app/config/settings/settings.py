@@ -1,6 +1,9 @@
 from pathlib      import Path
 
-from config.setup import DJANGO_KEY, PG_ADDRESS, PG_NAME, PG_PASSWORD, PG_PORT, PG_USERNAME
+import pymysql
+pymysql.install_as_MySQLdb()
+
+from config.setup import DJANGO_KEY, MYSQL_ADDRESS, MYSQL_NAME, MYSQL_PASSWORD, MYSQL_PORT, MYSQL_USERNAME
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -61,14 +64,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 DATABASES = {
     "default": {
-        "ENGINE"  : "django.db.backends.postgresql_psycopg2",
-        "NAME"    : PG_NAME,
-        "USER"    : PG_USERNAME,
-        "PASSWORD": PG_PASSWORD,
-        "HOST"    : PG_ADDRESS,
-        "PORT"    : PG_PORT,
+        "ENGINE"  : "django.db.backends.mysql",
+        "NAME"    : MYSQL_NAME,
+        "USER"    : MYSQL_USERNAME,
+        "PASSWORD": MYSQL_PASSWORD,
+        "HOST"    : MYSQL_ADDRESS,
+        "PORT"    : MYSQL_PORT,
         "OPTIONS" : {
-            "client_encoding": "UTF8",
+            "charset": "utf8mb4",
         },
     }
 }

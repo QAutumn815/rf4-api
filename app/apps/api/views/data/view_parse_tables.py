@@ -45,4 +45,4 @@ class ParserAPIView(generics.GenericAPIView):
                     {"id": process_data.delay(task_category, model_name, weekly = weekly).id, "status": "CREATED"}
                 )
 
-        return Response({"tasks": tasks}, status = status.HTTP_200_OK)
+        return Response({"tasks": tasks}, status = status.HTTP_202_ACCEPTED)

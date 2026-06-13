@@ -5,7 +5,7 @@ from apps.core.models import Record, AbsoluteRecord, WeeklyRecord
 
 class BaseRecordSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ["fish", "weight", "location", "bait", "player", "date", "region", "category"]
+        fields = ["fish", "fish_image", "weight", "location", "bait", "player", "date", "region", "category"]
 
     def to_representation(self, instance: Record) -> dict:
         data = super().to_representation(instance)

@@ -1,0 +1,390 @@
+/* ============================================================
+   Russian Fishing 4 — Community API / Frontend
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy-900: #0a0a1a;
+  --navy-800: #1a1a2e;
+  --navy-700: #16213e;
+  --navy-600: #0f3460;
+  --navy-500: #1a5276;
+  --accent:   #e94560;
+  --accent-light: #ff6b81;
+  --bg:       #f0f2f5;
+  --card-bg:  #ffffff;
+  --text:     #1a1a2e;
+  --text-muted: #6c757d;
+  --border:   #e0e3e8;
+  --success:  #28a745;
+  --warn:     #ffc107;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Navigation ---- */
+.navbar {
+  background: var(--navy-800);
+  color: #fff;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.navbar-brand {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  padding: .85rem 0;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.navbar-brand:hover { color: var(--accent-light); }
+.navbar-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  list-style: none;
+}
+.navbar-links a {
+  color: rgba(255,255,255,.8);
+  text-decoration: none;
+  padding: .85rem 1rem;
+  font-size: .875rem;
+  font-weight: 500;
+  transition: color .15s, background .15s;
+  border-radius: 6px 6px 0 0;
+}
+.navbar-links a:hover,
+.navbar-links a.active {
+  color: #fff;
+  background: rgba(255,255,255,.1);
+}
+
+/* ---- Page Header ---- */
+.page-header {
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 50%, var(--navy-600) 100%);
+  color: #fff;
+  padding: 2rem 2rem;
+  text-align: center;
+}
+.page-header h1 { font-size: 1.8rem; margin-bottom: .35rem; }
+.page-header p  { font-size: 1rem; opacity: .85; max-width: 650px; margin: 0 auto; }
+
+/* ---- Container ---- */
+.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem; width: 100%; }
+.container-wide { max-width: 1300px; }
+
+/* ---- Cards ---- */
+.card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.07);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.card h2 { font-size: 1.2rem; margin-bottom: 1rem; color: var(--navy-600); }
+
+/* ---- Filter Bar ---- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+.filter-group label {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.filter-group select,
+.filter-group input {
+  padding: .45rem .75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: .875rem;
+  background: #fff;
+  color: var(--text);
+  min-width: 120px;
+}
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: var(--navy-500);
+  box-shadow: 0 0 0 3px rgba(15,52,96,.15);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .45rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .2s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--navy-600); color: #fff; }
+.btn-primary:hover { background: var(--navy-500); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-outline:hover { background: #f0f2f5; }
+.btn-sm { padding: .3rem .8rem; font-size: .8rem; }
+
+/* ---- Table ---- */
+.table-wrapper { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .875rem;
+}
+th, td {
+  text-align: left;
+  padding: .65rem .5rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+th {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  background: #f8f9fb;
+}
+tr:hover td { background: #f8f9fb; }
+
+/* ---- Fish Image Cell ---- */
+.fish-cell {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.fish-cell img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #f0f2f5;
+}
+.fish-cell .fish-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: #e8ecf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.fish-name {
+  font-weight: 500;
+}
+
+/* ---- Badges ---- */
+.badge {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.badge-get    { background: #d4edda; color: #155724; }
+.badge-post   { background: #cce5ff; color: #004085; }
+.badge-delete { background: #f8d7da; color: #721c24; }
+
+.tag {
+  display: inline-block;
+  background: #e8ecf0;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: .78rem;
+  margin: 2px 4px 2px 0;
+}
+
+/* ---- Pagination ---- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .4rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 .6rem;
+  border-radius: 6px;
+  font-size: .85rem;
+  text-decoration: none;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--border);
+  transition: all .15s;
+}
+.pagination a:hover {
+  background: var(--navy-600);
+  color: #fff;
+  border-color: var(--navy-600);
+}
+.pagination .current {
+  background: var(--navy-600);
+  color: #fff;
+  border-color: var(--navy-600);
+  font-weight: 600;
+}
+.pagination .disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+/* ---- Summary Stats ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0,0,0,.07);
+}
+.stat-card .stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--navy-600);
+}
+.stat-card .stat-label {
+  font-size: .8rem;
+  color: var(--text-muted);
+  margin-top: .2rem;
+}
+
+/* ---- Quick Links ---- */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.quick-link-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: 0 1px 6px rgba(0,0,0,.07);
+  transition: transform .15s, box-shadow .15s;
+  border-left: 4px solid var(--navy-600);
+}
+.quick-link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+.quick-link-card h3 { font-size: 1rem; margin-bottom: .3rem; color: var(--navy-600); }
+.quick-link-card p  { font-size: .8rem; color: var(--text-muted); }
+
+/* ---- Empty State ---- */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: .5rem; }
+.empty-state h3 { font-size: 1.1rem; margin-bottom: .5rem; color: var(--text); }
+
+/* ---- Alerts ---- */
+.alert {
+  padding: .75rem 1rem;
+  border-radius: 6px;
+  font-size: .875rem;
+  margin-bottom: 1rem;
+}
+.alert-info    { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+.alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+.alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+
+/* ---- Price / Prize ---- */
+.prize-amount {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ---- Weight formatting ---- */
+.weight-value { font-weight: 600; }
+.weight-kg { color: var(--text-muted); font-size: .8rem; }
+.weight-gram { color: var(--text-muted); font-size: .75rem; }
+
+/* ---- Region badge ---- */
+.region-flag {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #e8ecf0;
+  text-transform: uppercase;
+}
+
+/* ---- Footer ---- */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-muted);
+  font-size: .82rem;
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .navbar { flex-direction: column; padding: 0 1rem; }
+  .navbar-links { width: 100%; }
+  .navbar-links a { flex: 1; text-align: center; padding: .6rem .5rem; font-size: .8rem; }
+  .filter-bar { flex-direction: column; }
+  .filter-group select,
+  .filter-group input { width: 100%; min-width: unset; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .quick-links { grid-template-columns: 1fr; }
+  .page-header { padding: 1.5rem 1rem; }
+  .page-header h1 { font-size: 1.4rem; }
+}

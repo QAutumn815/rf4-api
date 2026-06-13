@@ -31,11 +31,12 @@ class WinnerViewSet(viewsets.ModelViewSet):
         region   = self.kwargs.get("region")
         category = self.kwargs.get("category")
 
-        # Validate region
+        # Validate region and category
         URLParamsSerializer(
             data = {
                 "region": region,
+                "category": category,
             }
-        ).is_valid()
+        ).is_valid(raise_exception = True)
 
         return self.queryset.filter(region = region, category = category)

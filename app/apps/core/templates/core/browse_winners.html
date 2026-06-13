@@ -1,0 +1,131 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}比赛优胜 — RF4 数据平台{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <h1>🥇 比赛优胜</h1>
+  <p>锦标赛结果、得分与获奖玩家</p>
+</header>
+
+<div class="container">
+  <!-- Filter Bar -->
+  <div class="card">
+    <form method="get" action="">
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label for="region">区域</label>
+          <select id="region" name="region" onchange="this.form.submit()">
+            {% for r in all_regions %}
+            <option value="{{ r }}" {% if r == region %}selected{% endif %}>{{ r|upper }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="id_category">分类</label>
+          <select id="id_category" name="category" onchange="this.form.submit()">
+            {% for c in all_categories %}
+            <option value="{{ c }}" {% if c == category %}selected{% endif %}>{{ c|title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="player">玩家</label>
+          <input type="text" id="player" name="player" value="{{ request.GET.player }}" placeholder="用户名">
+        </div>
+        <div style="display: flex; gap: .5rem; align-items: flex-end;">
+          <button type="submit" class="btn btn-primary">🔍 筛选</button>
+          <a href="{% url 'browse_winners' region category %}" class="btn btn-outline">✕ 清除</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Winners Table -->
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: .75rem;">
+      <h2 style="margin-bottom: 0;">🏅 {{ region|upper }} / {{ category|title }}</h2>
+      <span style="font-size: .85rem; color: var(--text-muted);">
+        {% with count=page_obj.paginator.count %}
+        共 {{ count }} 位优胜者
+        {% endwith %}
+      </span>
+    </div>
+
+    {% if page_obj %}
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>玩家</th>
+            <th>纪录数</th>
+            <th>得分</th>
+            <th>奖品</th>
+            <th>分类</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for winner in page_obj %}
+          <tr>
+            <td><strong>{{ winner.position }}</strong></td>
+            <td>{{ winner.player }}</td>
+            <td>{{ winner.records }}</td>
+            <td><strong>{{ winner.score }}</strong></td>
+            <td>{% if winner.prize %}<span class="prize-amount">{{ winner.prize }}</span>{% else %}<span style="color: var(--text-muted);">—</span>{% endif %}</td>
+            <td><span class="tag">{{ winner.category }}</span></td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <div class="empty-icon">🏆</div>
+                <h3>暂无数据</h3>
+                <p>该区域/分类暂无优胜者数据，请先触发数据抓取。</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+      <a href="?page=1{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">««</a>
+      <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">«</a>
+      {% endif %}
+
+      {% for i in page_obj.paginator.num_pages|make_list %}
+        {% if i >= page_obj.number|add:"-3" and i <= page_obj.number|add:"3" %}
+          {% if i == page_obj.number %}
+          <span class="current">{{ i }}</span>
+          {% else %}
+          <a href="?page={{ i }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">»</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">»»</a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>暂无数据</h3>
+      <p>请先通过 API 或管理命令触发数据抓取。</p>
+      <div style="margin-top: 1rem;">
+        <pre style="background: #1a1a2e; color: #a5dff6; padding: .8rem 1rem; border-radius: 6px; display: inline-block; text-align: left;">
+python manage.py parse_all</pre>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

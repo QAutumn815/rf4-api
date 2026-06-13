@@ -34,14 +34,15 @@ class RecordsParser(AbstractParser):
         dp = DataProcessor()
 
         return {
-            "category": kwargs.get("category", "records"),
-            "region"  : region.lower(),
-            "player"  : dp.clean(data.find("div", class_ = "gamername").text.strip()),
-            "fish"    : dp.clean(kwargs.get("fish", "").strip()),
-            "weight"  : dp.to_kg(data.find("div", class_ = "weight").text),
-            "location": dp.clean(data.find("div", class_ = "location").text),
-            "bait"    : dp.clean(data.find("div", class_ = "bait_icon").get("title")),
-            "date"    : dp.serialize(data.find("div", class_ = "data").text),
+            "category"  : kwargs.get("category", "records"),
+            "region"    : region.lower(),
+            "player"    : dp.clean(data.find("div", class_ = "gamername").text.strip()),
+            "fish"      : dp.clean(kwargs.get("fish", "").strip()),
+            "fish_image": kwargs.get("fish_image", ""),
+            "weight"    : dp.to_kg(data.find("div", class_ = "weight").text),
+            "location"  : dp.clean(data.find("div", class_ = "location").text),
+            "bait"      : dp.clean(data.find("div", class_ = "bait_icon").get("title")),
+            "date"      : dp.serialize(data.find("div", class_ = "data").text),
         }
 
     def _parse_data(self, data, region: str, *args, **kwargs) -> list[dict]:
@@ -58,13 +59,31 @@ class RecordsParser(AbstractParser):
             if len(rows) <= 1:
                 continue
 
+            # Try to extract fish image from the fish container
+            fish_image = ""
+            try:
+                img_tag = fish.find("img")
+                if img_tag and img_tag.get("src"):
+                    src = img_tag["src"].strip()
+                    if src.startswith("//"):
+                        fish_image = f"https:{src}"
+                    elif src.startswith("/"):
+                        fish_image = f"https://rf4game.ru{src}"
+                    elif src.startswith("http"):
+                        fish_image = src
+            except Exception:
+                pass  # Image is optional
+
+            fish_name = fish.find("div", class_ = "text").text
+
             for row in rows:
                 sub_records.append(
                     self._serialize_data(
                         row,
                         region,
-                        fish     = fish.find("div", class_ = "text").text,
-                        category = kwargs.get("category", "records")
+                        fish       = fish_name,
+                        fish_image = fish_image,
+                        category   = kwargs.get("category", "records")
                     )
                 )
 

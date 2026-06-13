@@ -1,8 +1,14 @@
+from selenium.common.exceptions import TimeoutException, WebDriverException
+
 from apps.parser.services import ParsersManager, DBProcessor
 from worker               import app
 
 
-@app.task(autoretry_for = (Exception,), retry_kwargs = {"max_retries": 7, "countdown": 5})
+@app.task(
+    autoretry_for = (TimeoutException, WebDriverException, OSError, ConnectionError),
+    retry_kwargs  = {"max_retries": 3, "countdown": 10},
+    default_retry_delay = 30,
+)
 def process_data(parser_name, model_name: str, *args, **kwargs) -> None:
     parser = ParsersManager().create(parser_name)
     data   = []

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}俄罗斯钓鱼4 — 社区数据平台{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="{% url 'index' %}" class="navbar-brand">🎣 RF4 数据平台</a>
+    <ul class="navbar-links">
+      <li><a href="{% url 'index' %}">首页</a></li>
+      <li><a href="{% url 'browse_records' 'abs' 'gl' 'records' %}">鱼获纪录</a></li>
+      <li><a href="{% url 'browse_ratings' 'gl' %}">玩家评级</a></li>
+      <li><a href="{% url 'browse_winners' 'gl' 'records' %}">比赛优胜</a></li>
+      <li><a href="{% url 'swagger-ui' %}">API 文档</a></li>
+      <li><a href="{% url 'admin:index' %}">后台管理</a></li>
+    </ul>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <footer>
+    <p>
+      俄罗斯钓鱼4 — 社区数据平台 ·
+      非官方项目 · 数据版权归
+      <a href="https://rf4game.com" target="_blank">FishSoft LLC</a> 所有
+    </p>
+  </footer>
+
+  <script src="{% static 'core/js/main.js' %}"></script>
+</body>
+</html>

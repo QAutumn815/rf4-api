@@ -1,0 +1,130 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}RF4 数据平台 — 首页{% endblock %}
+
+{% block content %}
+<!-- 页头 -->
+<header class="page-header">
+  <h1>🎣 俄罗斯钓鱼4 — 社区数据平台</h1>
+  <p>
+    <strong>俄罗斯钓鱼4（Russian Fishing 4）</strong>的非官方 REST API，
+    提供鱼获纪录、玩家评级和比赛优胜数据，定期从官网自动抓取。
+  </p>
+</header>
+
+<div class="container">
+  <!-- 统计数据 -->
+  {% if stats %}
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.absolute_records }}</div>
+      <div class="stat-label">绝对纪录</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.weekly_records }}</div>
+      <div class="stat-label">每周纪录</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.ratings }}</div>
+      <div class="stat-label">玩家评级</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ stats.winners }}</div>
+      <div class="stat-label">比赛优胜</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- 快速导航 -->
+  <h2 style="margin-bottom: .75rem; color: #0f3460;">📂 数据浏览</h2>
+  <div class="quick-links">
+    <a href="{% url 'browse_records' 'abs' 'gl' 'records' %}" class="quick-link-card">
+      <h3>🏆 绝对纪录</h3>
+      <p>浏览各服最大鱼获重量排行</p>
+    </a>
+    <a href="{% url 'browse_records' 'wk' 'gl' 'records' %}" class="quick-link-card">
+      <h3>📅 每周纪录</h3>
+      <p>查看各地本周最佳鱼获</p>
+    </a>
+    <a href="{% url 'browse_ratings' 'gl' %}" class="quick-link-card">
+      <h3>📊 玩家评级</h3>
+      <p>各服玩家等级与游戏时长排行</p>
+    </a>
+    <a href="{% url 'browse_winners' 'gl' 'records' %}" class="quick-link-card">
+      <h3>🥇 比赛优胜</h3>
+      <p>锦标赛结果与获奖玩家</p>
+    </a>
+  </div>
+
+  <!-- API 文档 -->
+  <div class="card">
+    <h2>📖 API 文档</h2>
+    <div style="display: flex; gap: .75rem; flex-wrap: wrap;">
+      <a href="{% url 'swagger-ui' %}" class="btn btn-primary">Swagger UI</a>
+      <a href="{% url 'redoc' %}" class="btn btn-primary">ReDoc</a>
+      <a href="{% url 'schema' %}" class="btn btn-outline">OpenAPI Schema</a>
+    </div>
+  </div>
+
+  <!-- 接口列表 -->
+  <div class="card">
+    <h2>🔌 接口列表</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>路径</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ep in endpoints %}
+          <tr>
+            <td><span class="badge badge-{{ ep.method|lower }}">{{ ep.method }}</span></td>
+            <td><code>{{ ep.path }}</code></td>
+            <td>{{ ep.description }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 快速开始 -->
+  <div class="card">
+    <h2>🚀 快速开始</h2>
+    <p style="margin-bottom: .5rem;"><strong>触发数据抓取：</strong></p>
+    <pre style="background: #1a1a2e; color: #a5d6ff; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto;">
+curl -X POST http://127.0.0.1:8000/v1/parse/ \
+  -H "Content-Type: application/json" \
+  -d '{"tables": ["*"]}'</pre>
+
+    <p style="margin-top: .75rem;"><strong>查询鱼获纪录：</strong></p>
+    <pre style="background: #1a1a2e; color: #a5d6ff; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto;">
+curl http://127.0.0.1:8000/v1/records/abs/gl/records/
+curl http://127.0.0.1:8000/v1/ratings/gl/
+curl http://127.0.0.1:8000/v1/winners/gl/records/</pre>
+
+    <p style="margin-top: .75rem;"><strong>带筛选条件：</strong></p>
+    <pre style="background: #1a1a2e; color: #a5d6ff; padding: .8rem 1rem; border-radius: 6px; overflow-x: auto;">
+curl "http://127.0.0.1:8000/v1/records/abs/gl/records/?fish= Pike&min_weight=10"
+curl "http://127.0.0.1:8000/v1/ratings/gl/?in_days=true"</pre>
+  </div>
+
+  <!-- 支持的区域与分类 -->
+  <div class="card">
+    <h2>🌍 支持的区域与分类</h2>
+    <p><strong>区域：</strong>
+      {% for r in regions %}
+      <span class="tag">{{ r }}</span>
+      {% endfor %}
+    </p>
+    <p style="margin-top: .5rem;"><strong>分类：</strong>
+      {% for c in categories %}
+      <span class="tag">{{ c }}</span>
+      {% endfor %}
+    </p>
+  </div>
+</div>
+{% endblock %}

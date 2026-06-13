@@ -2,14 +2,15 @@ from django.db import models
 
 
 class Record(models.Model):
-    weight   = models.DecimalField(verbose_name = "Fish weight", max_digits = 16, decimal_places = 3)
-    fish     = models.CharField(verbose_name = "Fish name", max_length = 64)
-    location = models.CharField(verbose_name = "Location", max_length = 64)
-    bait     = models.CharField(verbose_name = "Bait name", max_length = 128)
-    player   = models.CharField(verbose_name = "Username", max_length = 256)
-    date     = models.DateField(verbose_name = "Date of catch")
-    region   = models.CharField(verbose_name = "Record region", max_length = 4)
-    category = models.CharField(verbose_name = "Record type", max_length = 16)
+    weight     = models.DecimalField(verbose_name = "Fish weight", max_digits = 16, decimal_places = 3)
+    fish       = models.CharField(verbose_name = "Fish name", max_length = 64)
+    fish_image = models.URLField(verbose_name = "Fish image URL", max_length = 512, blank = True, default = "")
+    location   = models.CharField(verbose_name = "Location", max_length = 64)
+    bait       = models.CharField(verbose_name = "Bait name", max_length = 128)
+    player     = models.CharField(verbose_name = "Username", max_length = 256)
+    date       = models.DateField(verbose_name = "Date of catch")
+    region     = models.CharField(verbose_name = "Record region", max_length = 4)
+    category   = models.CharField(verbose_name = "Record type", max_length = 16)
 
     class Meta:
         abstract = True
@@ -29,14 +30,15 @@ class Record(models.Model):
     @property
     def as_dict(self) -> dict:
         return {
-            "fish"    : self.fish,
-            "weight"  : self.weight,
-            "location": self.location,
-            "bait"    : self.bait,
-            "player"  : self.player,
-            "date"    : self.date,
-            "region"  : self.region,
-            "category": self.category,
+            "fish"      : self.fish,
+            "fish_image": self.fish_image,
+            "weight"    : self.weight,
+            "location"  : self.location,
+            "bait"      : self.bait,
+            "player"    : self.player,
+            "date"      : self.date,
+            "region"    : self.region,
+            "category"  : self.category,
         }
 
     @property

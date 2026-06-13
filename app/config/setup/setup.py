@@ -13,9 +13,9 @@ def get_variable(name: str) -> str:
 # Django
 DJANGO_KEY  : str = get_variable("DJANGO_KEY")
 
-# Postgres
-PG_USERNAME : str  = get_variable("POSTGRES_USERNAME")
-PG_PASSWORD : str  = get_variable("POSTGRES_PASSWORD")
-PG_ADDRESS  : str  = get_variable("POSTGRES_ADDRESS")
-PG_NAME     : str  = get_variable("POSTGRES_NAME")
-PG_PORT     : str  = get_variable("POSTGRES_PORT")
+# MySQL
+MYSQL_USERNAME : str  = get_variable("MYSQL_USERNAME")
+MYSQL_PASSWORD : str  = get_variable("MYSQL_PASSWORD")
+MYSQL_ADDRESS  : str  = get_variable("MYSQL_ADDRESS")
+MYSQL_NAME     : str  = get_variable("MYSQL_NAME")
+MYSQL_PORT     : str  = get_variable("MYSQL_PORT")
