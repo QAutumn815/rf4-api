@@ -11,193 +11,193 @@
 <br />
 
 <div align="center">
-  Unofficial catch API for Russian Fishing 4
+  Russian Fishing 4 非官方渔获数据 API
 </div>
 
 <div align="center">
   <sub>
     Built with love
-    &bull; Brought to you by <a href="https://github.com/hurfy">@hurfy</a>
-    and other <a href="https://github.com/hurfy/rf4-api/graphs/contributors">contributors</a>
+    &bull; 作者 <a href="https://github.com/hurfy">@hurfy</a>
+    &bull; <a href="https://github.com/hurfy/rf4-api/graphs/contributors">贡献者</a>
   </sub>
 </div>
 
 ---
 
-## 📖 Introduction
+## 📖 项目简介
 
-**This project is still in development!**
+**本项目仍在开发中！**
 
-The main objective of this project is the periodic collection of data regarding records, ratings, and winners from the official [Russian Fishing 4](https://rf4game.com) website, followed by processing and presenting it in a convenient format — via both a **REST API** and a **browsable web UI**. The parsing covers all 10 server regions and 3 rod categories (Records, Ultralight, Telestick) for each table.
+该项目的主要目标是从俄罗斯钓鱼 4（Russian Fishing 4）官方网站定时采集**渔获记录**、**玩家评级**和**比赛优胜者**数据，经过处理后以 REST API 和可浏览的 Web 页面两种形式呈现。爬取覆盖全部 10 个服务器区域和 3 种钓竿分类。
 
-*I do not own the data but collect it to present in a convenient and accessible format. All rights are reserved by FishSoft LLC.*
+*我不拥有这些数据，仅进行采集并以方便使用的格式呈现。所有权利归 FishSoft LLC 所有。*
 
 ---
 
-## ✨ Features
+## ✨ 功能特性
 
-### 📊 Data Collection
-| Feature | Description |
+### 📊 数据采集
+| 功能 | 说明 |
 |---|---|
-| **Absolute Records** | All-time fish records across all regions and categories |
-| **Weekly Records** | Weekly fish records (updated weekly per region) |
-| **Player Ratings** | Player rankings with level and playtime data |
-| **Competition Winners** | Tournament standings with scores and prizes |
-| **10 Regions** | GL, RU, DE, US, FR, CN, PL, KR, JP, EN |
-| **3 Categories** | Records, Ultralight, Telestick |
-| **Fish Image Caching** | Automatically downloads and caches fish icons locally, bypassing hotlink protection |
+| **绝对记录** | 全服历史渔获记录（所有区域和分类） |
+| **周记录** | 每周渔获记录（按区域更新） |
+| **玩家评级** | 玩家排名数据（等级、游戏时长） |
+| **比赛优胜者** | 赛事排名（得分、奖品） |
+| **10 个区域** | 全球、俄、德、美、法、中、波、韩、日、欧 |
+| **3 种分类** | 标准记录、超轻竿、伸缩竿 |
+| **鱼类图标缓存** | 自动下载并本地缓存鱼类图标，绕过防盗链 |
 
 ### 🌐 REST API
-| Method | Endpoint | Description |
+| 方法 | 接口地址 | 说明 |
 |---|---|---|
-| `POST` | `/v1/parse/` | Trigger asynchronous data scraping (via Celery) |
-| `DELETE` | `/v1/clear/` | Clear table data |
-| `GET` | `/v1/records/abs/{region}/{category}/` | List absolute records |
-| `GET` | `/v1/records/wk/{region}/{category}/` | List weekly records |
-| `GET` | `/v1/ratings/{region}/` | List player ratings |
-| `GET` | `/v1/winners/{region}/{category}/` | List competition winners |
+| `POST` | `/v1/parse/` | 触发异步数据爬取（通过 Celery） |
+| `DELETE` | `/v1/clear/` | 清空表数据 |
+| `GET` | `/v1/records/abs/{region}/{category}/` | 获取绝对记录 |
+| `GET` | `/v1/records/wk/{region}/{category}/` | 获取周记录 |
+| `GET` | `/v1/ratings/{region}/` | 获取玩家评级 |
+| `GET` | `/v1/winners/{region}/{category}/` | 获取比赛优胜者 |
 
-Each `GET` endpoint supports:
+每个 `GET` 接口均支持：
 
-- **Filtering** via query parameters — filter by fish, player, location, bait, weight range, date range, position range, level, score, prize, and more
-- **Pagination** — `?page=` and `?per_page=` (default 25, max 100)
-- **Ordering** — `?ordering=<field>` (any field, prefix `-` for descending)
-- **Display transforms** — `?in_gram=true` (records → weight in grams), `?in_days=true` (ratings → playtime in days)
+- **过滤** — 按鱼种、玩家、地点、鱼饵、体重范围、日期范围、排名、等级、分数、奖品等筛选
+- **分页** — `?page=` 和 `?per_page=`（默认 25，最大 100）
+- **排序** — `?ordering=<字段>`（加 `-` 前缀为降序）
+- **格式转换** — `?in_gram=true`（重量转克）、`?in_days=true`（游戏时长转天）
 
-### 🖥️ Browsable Web UI
-| Route | Page |
+### 🖥️ 可浏览 Web 页面
+| 路由 | 页面 |
 |---|---|
-| `/` | Dashboard with stats and API reference |
-| `/browse/records/{abs\|wk}/{region}/{category}/` | Browse fish records with filters |
-| `/browse/ratings/{region}/` | Browse player ratings with filters |
-| `/browse/winners/{region}/{category}/` | Browse competition winners with filters |
+| `/` | 仪表盘（数据统计 + API 参考） |
+| `/browse/records/{abs\|wk}/{region}/{category}/` | 渔获记录浏览（支持筛选） |
+| `/browse/ratings/{region}/` | 玩家评级浏览（支持筛选） |
+| `/browse/winners/{region}/{category}/` | 比赛优胜者浏览（支持筛选） |
 
-### 📚 API Documentation (Auto-generated)
-| Route | Type |
+### 📚 API 文档（自动生成）
+| 路由 | 类型 |
 |---|---|
 | `/docs/` | OpenAPI 3.0 JSON Schema |
 | `/docs/swagger/` | Swagger UI |
 | `/docs/redoc/` | ReDoc UI |
 
-### 🔧 Admin Interface
-Full Django admin at `/admin/` for managing all data models with search, filtering, and date hierarchy.
+### 🔧 后台管理
+完整 Django Admin 后台（`/admin/`），支持数据模型的搜索、筛选和日期层级导航。
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ 系统架构
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      Web Scraper Layer                       │
-│  Selenium Chrome (headless) → HTML → BeautifulSoup → data   │
+│                      爬取层                                  │
+│  Selenium Chrome (无头) → HTML → BeautifulSoup → 结构化数据 │
 └─────────────────────┬───────────────────────────────────────┘
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    Processing Layer                           │
-│  DataProcessor (weight/date cleaning)                       │
-│  FishImageCache (download & cache fish icons)               │
-│  DBProcessor (atomic bulk write)                            │
+│                      处理层                                  │
+│  DataProcessor（重量/日期清洗转换）                         │
+│  FishImageCache（下载并缓存鱼类图标）                      │
+│  DBProcessor（原子批量写入）                                │
 └─────────────────────┬───────────────────────────────────────┘
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                       Data Layer                              │
-│  MySQL Database                                              │
-│  Models: AbsoluteRecord, WeeklyRecord, Rating, Winner        │
+│                      数据层                                  │
+│  MySQL 数据库                                               │
+│  模型: AbsoluteRecord, WeeklyRecord, Rating, Winner         │
 └──────────┬──────────────────┬──────────────────┬─────────────┘
            │                  │                  │
            ▼                  ▼                  ▼
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────────┐
-│   REST API      │ │  Browse UI      │ │  API Docs           │
+│   REST API      │ │   Web 页面      │ │   API 文档          │
 │  (DRF viewsets) │ │  (TemplateView) │ │  (drf-spectacular)  │
 └─────────────────┘ └─────────────────┘ └─────────────────────┘
 ```
 
-### Data Flow
+### 数据流程
 
-1. **Scraping** — `ParsersManager` orchestrates fetchers & parsers for each data source
-2. **Processing** — Raw data is cleaned, converted (weights → kg, dates → ISO), and fish images are cached locally
-3. **Storage** — Processed data is bulk-written to MySQL in a single atomic transaction (replaces old data)
-4. **Serving** — Both the REST API and the web UI read from the same database
+1. **爬取** — `ParsersManager` 协调各数据源的抓取器和解析器
+2. **处理** — 原始数据经过清洗、转换（重量 → 千克，日期 → ISO 格式），鱼类图标缓存到本地
+3. **存储** — 处理后的数据以原子事务批量写入 MySQL（全量替换旧数据）
+4. **展示** — REST API 和 Web 页面均从同一数据库读取
 
-The scraping can run via **Celery workers** (async) or via a **management command** (sync, for one-shot runs without Celery).
+爬取可通过 **Celery 异步任务** 或 **管理命令**（同步，无需 Celery）两种方式运行。
 
 ---
 
-## 🧰 Tech Stack
+## 🧰 技术栈
 
-| Category | Technology |
+| 类别 | 技术 |
 |---|---|
-| **Framework** | Django 5.1 + Django REST Framework 3.15 |
-| **Database** | MySQL (via PyMySQL) |
-| **Scraping** | Selenium 4.23 + BeautifulSoup 4 |
-| **Task Queue** | Celery 5.4 (Redis broker) |
-| **API Docs** | drf-spectacular (OpenAPI 3.0 / Swagger / ReDoc) |
-| **Filtering** | django-filter |
-| **Config** | python-decouple (.env) |
+| **框架** | Django 5.1 + Django REST Framework 3.15 |
+| **数据库** | MySQL（PyMySQL） |
+| **爬虫** | Selenium 4.23 + BeautifulSoup 4 |
+| **任务队列** | Celery 5.4（Redis 作为消息代理） |
+| **API 文档** | drf-spectacular（OpenAPI 3.0 / Swagger / ReDoc） |
+| **过滤** | django-filter |
+| **配置** | python-decouple（.env） |
 
 ---
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-> Currently only development mode is available.
+> 目前仅支持开发模式。
 
-### Prerequisites
+### 前置要求
 
 - Python 3.10+
-- MySQL server
-- Redis (for Celery)
-- Chrome / Chromium (for Selenium scraping)
+- MySQL 服务器
+- Redis（Celery 需要）
+- Chrome / Chromium（Selenium 爬取需要）
 
-### Setup
+### 安装运行
 
 ```shell
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/QAutumn815/rf4-api.git
 cd rf4-api
 
-# Install dependencies
+# 安装依赖
 pip install -r requirements.txt
 
-# Configure environment
+# 配置环境变量
 cp .env.example .env
-# Edit .env with your MySQL credentials and Django secret key
+# 编辑 .env，填入 MySQL 连接信息和 Django 密钥
 
-# Run migrations
+# 执行数据库迁移
 python manage.py migrate
 
-# Start Django development server
+# 启动 Django 开发服务器
 python manage.py runserver
 
-# Start Celery worker (in a separate terminal)
+# 在另一个终端启动 Celery 工作进程
 celery -A worker.app worker -l INFO -c 1 -P solo
 
-# Or run a one-time sync scrape (no Celery needed)
+# 或执行一次性同步爬取（无需 Celery）
 python manage.py scrape_all
 ```
 
-### API Usage Examples
+### API 调用示例
 
 ```shell
-# Get absolute records for the global region, records category
+# 获取全球区域标准分类的绝对记录
 curl http://localhost:8000/v1/records/abs/gl/records/
 
-# Get weekly records for the US region, ultralight category
+# 获取美服超轻竿周记录
 curl http://localhost:8000/v1/records/wk/us/ultralight/
 
-# Get player ratings for EU region, filtered by player name
+# 获取欧服玩家评级，按玩家名筛选
 curl "http://localhost:8000/v1/ratings/de/?player=Fisherman"
 
-# Get winners with min score filter
+# 获取俄服伸缩竿比赛优胜者，最低分数 1000
 curl "http://localhost:8000/v1/winners/ru/telestick/?min_score=1000"
 
-# Trigger a full data scrape
+# 触发全量数据爬取
 curl -X POST http://localhost:8000/v1/parse/ \
   -H "Content-Type: application/json" \
   -d '{"tables": ["*"]}'
 
-# Clear all data
+# 清空所有数据
 curl -X DELETE http://localhost:8000/v1/clear/ \
   -H "Content-Type: application/json" \
   -d '{"tables": ["*"]}'
@@ -205,45 +205,45 @@ curl -X DELETE http://localhost:8000/v1/clear/ \
 
 ---
 
-## 🌍 Supported Regions
+## 🌍 支持的区域
 
-| Code | Region |
+| 代码 | 区域 |
 |---|---|
-| `gl` | Global |
-| `ru` | Russia |
-| `de` | Germany |
-| `us` | USA |
-| `fr` | France |
-| `cn` | China |
-| `pl` | Poland |
-| `kr` | South Korea |
-| `jp` | Japan |
-| `en` | Europe (English) |
+| `gl` | 全球 Global |
+| `ru` | 俄罗斯 |
+| `de` | 德国 |
+| `us` | 美国 |
+| `fr` | 法国 |
+| `cn` | 中国 |
+| `pl` | 波兰 |
+| `kr` | 韩国 |
+| `jp` | 日本 |
+| `en` | 欧洲（英语） |
 
-## 🎣 Supported Categories
+## 🎣 支持的分类
 
-| Slug | Description |
+| 标识 | 说明 |
 |---|---|
-| `records` | Standard records |
-| `ultralight` | Ultralight rod records |
-| `telestick` | Telestick rod records |
+| `records` | 标准记录 |
+| `ultralight` | 超轻竿 |
+| `telestick` | 伸缩竿 |
 
 ---
 
-## 📄 License
+## 📄 开源协议
 
-Distributed under the MIT License. See `LICENSE` for more information.
+基于 MIT 协议分发。详见 `LICENSE` 文件。
 
 ---
 
 <div align="center">
   <sub>
     Built with love
-    &bull; Brought to you by <a href="https://github.com/hurfy">@hurfy</a>
-    and other <a href="https://github.com/hurfy/rf4-api/graphs/contributors">contributors</a>
+    &bull; 作者 <a href="https://github.com/hurfy">@hurfy</a>
+    &bull; <a href="https://github.com/hurfy/rf4-api/graphs/contributors">贡献者</a>
   </sub>
   <br />
   <sub>
-    <em>All game data belongs to <a href="https://rf4game.com">FishSoft LLC</a>. This project is not affiliated with or endorsed by FishSoft LLC.</em>
+    <em>所有游戏数据归 <a href="https://rf4game.com">FishSoft LLC</a> 所有。本项目与 FishSoft LLC 无任何关联，也未获其认可。</em>
   </sub>
 </div>
