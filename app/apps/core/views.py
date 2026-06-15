@@ -55,15 +55,17 @@ class BrowseRecordsView(ListView):
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         self._record_type = kwargs.get("record_type", "abs")
-        self._region = kwargs.get("region", "gl")
-        self._category = kwargs.get("category", "records")
+        # Support GET param overrides so dropdown selectors actually work
+        self._region = request.GET.get("region") or kwargs.get("region", "gl")
+        self._category = request.GET.get("category") or kwargs.get("category", "records")
         self._model = WeeklyRecord if self._record_type == "wk" else AbsoluteRecord
 
     def get_queryset(self):
-        qs = self._model.objects.filter(
-            region=self._region,
-            category=self._category,
-        )
+        qs = self._model.objects.all()
+        if self._region and self._region != "all":
+            qs = qs.filter(region=self._region)
+        if self._category and self._category != "all":
+            qs = qs.filter(category=self._category)
         # Apply GET-parameter filters
         params = self.request.GET
         fish = params.get("fish", "").strip()
@@ -119,10 +121,12 @@ class BrowseRatingsView(ListView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        self._region = kwargs.get("region", "gl")
+        self._region = request.GET.get("region") or kwargs.get("region", "gl")
 
     def get_queryset(self):
-        qs = Rating.objects.filter(region=self._region)
+        qs = Rating.objects.all()
+        if self._region and self._region != "all":
+            qs = qs.filter(region=self._region)
         player = self.request.GET.get("player", "").strip()
         if player:
             qs = qs.filter(player__icontains=player)
@@ -149,11 +153,15 @@ class BrowseWinnersView(ListView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        self._region = kwargs.get("region", "gl")
-        self._category = kwargs.get("category", "records")
+        self._region = request.GET.get("region") or kwargs.get("region", "gl")
+        self._category = request.GET.get("category") or kwargs.get("category", "records")
 
     def get_queryset(self):
-        qs = Winner.objects.filter(region=self._region, category=self._category)
+        qs = Winner.objects.all()
+        if self._region and self._region != "all":
+            qs = qs.filter(region=self._region)
+        if self._category and self._category != "all":
+            qs = qs.filter(category=self._category)
         player = self.request.GET.get("player", "").strip()
         if player:
             qs = qs.filter(player__icontains=player)

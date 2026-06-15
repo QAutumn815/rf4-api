@@ -7,6 +7,11 @@ class AbstractFetcher(ABC):
         self.__driver = driver
         self._urls    = urls
 
+    @property
+    def selenium_driver(self):
+        """Expose the underlying Selenium WebDriver for image downloads."""
+        return self.__driver.driver
+
     @abstractmethod
     def _get_urls(self, *args, **kwargs) -> tuple[str, dict]:
         """Generating a list of record table URLs"""

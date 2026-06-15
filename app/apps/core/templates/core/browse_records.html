@@ -16,6 +16,7 @@
         <div class="filter-group">
           <label for="region">区域</label>
           <select id="region" name="region" class="filter-auto-submit" onchange="this.form.submit()">
+            <option value="all" {% if region == 'all' %}selected{% endif %}>🌍 全部区域</option>
             {% for r in all_regions %}
             <option value="{{ r }}" {% if r == region %}selected{% endif %}>{{ r|upper }}</option>
             {% endfor %}

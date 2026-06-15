@@ -22,6 +22,11 @@ class AbstractParser(ABC):
         """Search and process information from HTML"""
         pass
 
+    @property
+    def _selenium_driver(self):
+        """Access the Selenium WebDriver from the fetcher for image downloads."""
+        return self.__fetcher.selenium_driver
+
     def parse(self, *args, **kwargs) -> dict:
         """Wrapper for parsing all tables"""
         fetched_data = self.__fetcher.fetch(*args, **kwargs)
@@ -72,7 +77,7 @@ class RecordsParser(AbstractParser):
                 match = re.search(r'background-image:\s*url\([\'"]?(//[^\'")]+)[\'"]?\)', style)
                 if match:
                     remote_url = "https:" + match.group(1)
-                    fish_image = FishImageCache.get(remote_url)
+                    fish_image = FishImageCache.get(remote_url, driver=self._selenium_driver)
 
             for row in rows:
                 sub_records.append(
