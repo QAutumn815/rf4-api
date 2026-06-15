@@ -154,7 +154,7 @@
 
 ```shell
 # 克隆仓库
-git clone https://github.com/hurfy/rf4-api.git
+git clone https://github.com/QAutumn815/rf4-api.git
 cd rf4-api
 
 # 安装依赖

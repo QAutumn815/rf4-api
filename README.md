@@ -154,7 +154,7 @@ The scraping can run via **Celery workers** (async) or via a **management comman
 
 ```shell
 # Clone the repository
-git clone https://github.com/hurfy/rf4-api.git
+git clone https://github.com/QAutumn815/rf4-api.git
 cd rf4-api
 
 # Install dependencies
